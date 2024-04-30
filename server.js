@@ -19,6 +19,8 @@ const dbConfig = {
   }
 };
 
+const PORT = process.env.PORT || 3000;
+
 const validStatus = ['to do', 'in progress', 'done'];
 
 const client = new Client(dbConfig);
@@ -26,8 +28,8 @@ const client = new Client(dbConfig);
 const initializeDBAndServer = async () => {
   try {
     await client.connect();
-    app.listen(3000, () => {
-      console.log("Server Running at http://localhost:3000/");
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
     });
   } catch (e) {
     console.error(`DB Error: ${e.message}`);
