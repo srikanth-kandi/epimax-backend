@@ -1,0 +1,32 @@
+{
+  "name": "epimax-backend",
+  "version": "1.0.0",
+  "description": "Provides API Endpoints for Tasks and Users backed by PostgreSQL Database.",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/srikanth-kandi/epimax-backend.git"
+  },
+  "keywords": [
+    "api",
+    "rest-api",
+    "expressjs"
+  ],
+  "author": "srikanth-kandi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/srikanth-kandi/epimax-backend/issues"
+  },
+  "homepage": "https://github.com/srikanth-kandi/epimax-backend#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "nodemon": "^3.1.0",
+    "pg": "^8.11.5"
+  }
+}
