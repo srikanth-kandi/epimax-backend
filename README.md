@@ -1,4 +1,3 @@
-```markdown
 # EpiMax Tasks API
 
 ### Database Schema
