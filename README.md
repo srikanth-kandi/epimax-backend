@@ -1,8 +1,8 @@
 # EpiMax Tasks API
 
-Live API URL - [https://epimax-backend-3j21.onrender.com](https://epimax-backend-3j21.onrender.com)
+Live API URL - [https://epimax-backend-3j21.onrender.com/docs](https://epimax-backend-3j21.onrender.com/docs)
 
-Since the API is currently deployed on the **Free Web Service** of [Render](https://render.com), sometimes the server may be in sleep mode. If you encounter any issues, please try after some time. Thank you!
+⚠️ Since the API is currently deployed on the **Free Web Service** of [Render](https://render.com), sometimes the server may be in sleep mode. If you encounter any issues, please try after some time. Thank you!
 
 > Your free instance will spin down with inactivity, which can delay requests by 50 seconds or more.
 
