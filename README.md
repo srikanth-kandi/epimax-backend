@@ -205,6 +205,14 @@ Tasks created by `testuser`
             }
             ```
 
+Before proceeding to below endpoints the token received from the `/login` endpoint must be added to the request headers as `Authorization: Bearer TOKEN_RECEIVED_FROM_LOGIN_ENDPOINT`. Falied to provide the token will result in below response from the server.
+
+```json
+{
+    "message": "Authentication failed"
+}
+```
+
 3. **Create Task**
 
     - Endpoint: `/tasks`
@@ -318,6 +326,15 @@ Tasks created by `testuser`
             }
             ```
     - Error Response:
+        - Status Code: `400`
+        - Response Body:
+        If the task ID is not a valid number.
+
+            ```json
+            {
+                "message": "Task id must be a positive number"
+            }
+            ```
         - Status Code: `404`
         - Response Body:
         If the task with the given ID is not found.
@@ -368,6 +385,24 @@ Tasks created by `testuser`
             }
             ```
     - Error Response:
+        - Status Code: `400`
+        - Response Body:
+        If the task ID is not a valid number.
+
+            ```json
+            {
+                "message": "Task id must be a positive number"
+            }
+            ```
+        - Status Code: `400`
+        - Response Body:
+        If the `"status"` is invalid.
+
+            ```json
+            {
+                "message": "Invalid status, status must be 'to do' or 'in progress' or 'done'"
+            }
+            ```
         - Status Code: `404`
         - Response Body:
         If the task with the given ID is not found.
@@ -384,6 +419,15 @@ Tasks created by `testuser`
             ```json
             {
                 "message": "You are not authorized to update this task"
+            }
+            ```
+        - Status Code: `400`
+        - Response Body:
+        If there is no data provided to update.
+
+            ```json
+            {
+                "message": "At least one parameter (title, description, status) must be provided"
             }
             ```
         - Status Code: `500`
@@ -409,6 +453,15 @@ Tasks created by `testuser`
             }
             ```
     - Error Response:
+        - Status Code: `400`
+        - Response Body:
+        If the task ID is not a valid number.
+
+            ```json
+            {
+                "message": "Task id must be a positive number"
+            }
+            ```
         - Status Code: `404`
         - Response Body:
         If the task with the given ID is not found.

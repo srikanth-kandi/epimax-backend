@@ -74,7 +74,7 @@ app.post("/login", async (req, res) => {
         const existingUserQuery = `SELECT * FROM users WHERE username = '${username}';`;
         const existingUser = await client.query(existingUserQuery);
         if (existingUser.rows.length === 0) {
-            return res.status(400).json({ message: "User with this username does not exist" });
+            return res.status(404).json({ message: "User with this username does not exist" });
         }
         const hashedPassword = existingUser.rows[0].password_hash;
         const isPasswordCorrect = await bcrypt.compare(password, hashedPassword);
