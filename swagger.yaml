@@ -1,0 +1,591 @@
+openapi: "3.0.0"
+info:
+  title: "EpiMax Tasks API"
+  description: "CRUD API for managing tasks by logged in users"
+  version: "v1"
+  contact:
+    name: "GitHub Repository"
+    url: "https://github.com/srikanth-kandi/epimax-backend"
+  license:
+    name: "MIT"
+    url: "https://opensource.org/licenses/MIT"
+
+servers:
+  - url: "https://epimax-backend-3j21.onrender.com"
+    description: "Production server"
+  - url: "http://localhost:3000"
+    description: "Local development server"
+
+tags:
+  - name: "Users"
+  - name: "Tasks"
+
+paths:
+  /register:
+    post:
+      tags:
+        - "Users"
+      summary: "Creates a new user"
+      description: "Creates a new user with the username and password provided"
+      operationId: "registerUser"
+      requestBody:
+        description: "json object with username and password"
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                username:
+                  type: "string"
+                password:
+                  type: "string"
+        required: true
+      responses:
+        201:
+          description: "User created successfully"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "User created successfully"
+        400:
+          description: "If the \"username\" or \"password\" is missing or `null`"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "username and password are required"
+        400:
+          description: "If the user with the same \"username\" already exists"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "User with this username already exists"
+        500:
+          description: "If there are any issues with the server requests or database"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Internal server error"
+  /login:
+    post:
+      tags:
+        - "Users"
+      summary: "Login the registered user"
+      description: "Lets the user login with the username and password, returns a JWT token for Tasks API requests"
+      operationId: "loginUser"
+      requestBody:
+        description: "json object with username and password"
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                username:
+                  type: "string"
+                password:
+                  type: "string"
+        required: true
+      responses:
+        200:
+          description: "User logged in successfully"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  token:
+                    type: "string"
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNyaWthbnRoIiwiaWF0IjoxNzE0NDk1MzgzLCJleHAiOjE3MTQ1ODE3ODN9.oBJYdDJrKzh4PtwNKb79FSUXzIJLCqksExYs2OzRzsw"
+        400:
+          description: "If the \"username\" or \"password\" is missing or `null`"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "username and password are required"
+        404:
+          description: "If the user with the given \"username\" does not exist"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "User with this username does not exist"
+        401:
+          description: "If the password is incorrect"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Invalid password"
+        500:
+          description: "If there are any issues with the server requests or database"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Internal server error"
+  /tasks:
+    get:
+      tags:
+        - "Tasks"
+      summary: "Get all tasks"
+      description: "Returns all the tasks created by the logged in user"
+      operationId: "getTasks"
+      responses:
+        200:
+          description: "Tasks fetched successfully"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    id:
+                      type: "integer"
+                    title:
+                      type: "string"
+                    description:
+                      type: "string"
+                    status:
+                      type: "string"
+        401:
+          description: "If the JWT token is missing or invalid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Authentication failed"
+        404:
+          description: "If the user has not created any tasks yet"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "No tasks found for this user"
+        500:
+          description: "If there are any issues with the server requests or database"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Internal server error"
+      security:
+        - bearerAuth: []
+    post:
+      tags:
+        - "Tasks"
+      summary: "Create a new task"
+      description: "Creates a new task with the title, description and status provided"
+      operationId: "createTask"
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: "json object with title,description and status"
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                title:
+                  type: "string"
+                description:
+                  type: "string"
+                status:
+                  type: "string"
+        required: true
+      responses:
+        201:
+          description: "Task created successfully"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Task created successfully"
+        400:
+          description: "If the \"title\" or \"description\" or \"status\" is missing or `null`"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "title, description and status are required"
+        401:
+          description: "If the JWT token is missing or invalid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Authentication failed"
+        422:
+          description: "If the status is not one of the allowed values"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Invalid status, status must be 'to do' or 'in progress' or 'done'"
+        500:
+          description: "If there are any issues with the server requests or database"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Internal server error"
+  /tasks/{taskId}:
+    get:
+      tags:
+        - "Tasks"
+      summary: "Get a task"
+      description: "Returns the task with the given taskId"
+      operationId: "getTask"
+      parameters:
+        - name: "taskId"
+          in: "path"
+          description: "ID of the task to get"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        200:
+          description: "Task fetched successfully"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  id:
+                    type: "integer"
+                  title:
+                    type: "string"
+                  description:
+                    type: "string"
+                  status:
+                    type: "string"
+        400:
+          description: "If the taskId is not a valid number"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Task id must be a positive number"
+        401:
+          description: "If the JWT token is missing or invalid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Authentication failed"
+        404:
+          description: "If the task with the given taskId does not exist"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Task not found for this id"
+        403:
+          description: "If the task with the given taskId does not belong to the logged in user"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "You are not authorized to view this task"
+        500:
+          description: "If there are any issues with the server requests or database"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Internal server error"
+      security:
+        - bearerAuth: []
+    put:
+      tags:
+        - "Tasks"
+      summary: "Update a task"
+      description: "Updates the task with the given taskId and any of the title, description and status provided"
+      operationId: "updateTask"
+      parameters:
+        - name: "taskId"
+          in: "path"
+          description: "ID of the task to update"
+          required: true
+          schema:
+            type: "integer"
+      requestBody:
+        description: "must provided at least one of title, description or status"
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                title:
+                  type: "string"
+                description:
+                  type: "string"
+                status:
+                  type: "string"
+        required: true
+      responses:
+        200:
+          description: "Task updated successfully"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Task updated successfully"
+        400:
+          description: "If the taskId is not a valid number"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Task id must be a positive number"
+        422:
+          description: "If the status is not one of the allowed values"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Invalid status, status must be 'to do' or 'in progress' or 'done'"
+        401:
+          description: "If the JWT token is missing or invalid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Authentication failed"
+        404:
+          description: "If the task with the given taskId does not exist"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Task not found for this id"
+        403:
+          description: "If the task with the given taskId does not belong to the logged in user"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "You are not authorized to update this task"
+        409:
+          description: "If the request body is empty"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "At least one parameter (title, description, status) must be provided"
+        500:
+          description: "If there are any issues with the server requests or database"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Internal server error"
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+        - "Tasks"
+      summary: "Delete a task"
+      description: "Deletes the task with the given taskId"
+      operationId: "deleteTask"
+      parameters:
+        - name: "taskId"
+          in: "path"
+          description: "ID of the task to delete"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        200:
+          description: "Task deleted successfully"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Task deleted successfully"
+        400:
+          description: "If the taskId is not a valid number"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Task id must be a positive number"
+        401:
+          description: "If the JWT token is missing or invalid"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Authentication failed"
+        404:
+          description: "If the task with the given taskId does not exist"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Task not found for this id"
+        403:
+          description: "If the task with the given taskId does not belong to the logged in user"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "You are not authorized to delete this task"
+        500:
+          description: "If there are any issues with the server requests or database"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Internal server error"
+      security:
+        - bearerAuth: []
+
+components:
+  schemas:
+    users:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        username:
+          type: "string"
+        password_hash:
+          type: "string"
+    tasks:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        title:
+          type: "string"
+        description:
+          type: "string"
+        status:
+          type: "string"
+          enum:
+            - "to do"
+            - "in progress"
+            - "done"
+        assignee_id:
+          type: "integer"
+        created_at:
+          type: "string"
+          format: "date-time"
+        updated_at:
+          type: "string"
+          format: "date-time"
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

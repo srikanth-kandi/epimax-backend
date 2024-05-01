@@ -2,10 +2,15 @@ const express = require("express");
 const { Client } = require("pg");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const YAML = require("yamljs");
+const swaggerUI = require("swagger-ui-express");
+const swaggerJsDocs = YAML.load("./swagger.yaml");
 require('dotenv').config();
 
 const app = express();
 app.use(express.json());
+
+app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerJsDocs));
 
 const dbConfig = {
   user: process.env.DB_USER,
@@ -79,7 +84,7 @@ app.post("/login", async (req, res) => {
         const hashedPassword = existingUser.rows[0].password_hash;
         const isPasswordCorrect = await bcrypt.compare(password, hashedPassword);
         if (!isPasswordCorrect) {
-            return res.status(400).json({ message: "Invalid password" });
+            return res.status(401).json({ message: "Invalid password" });
         }
         const token = jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: "24h" });
         res.status(200).json({ token });
@@ -113,7 +118,7 @@ app.post("/tasks", authenticateToken, async (req, res) => {
         }
         // check if status is valid
         if (!validStatus.includes(status)) {
-            return res.status(400).json({ message: "Invalid status, status must be 'to do' or 'in progress' or 'done'" });
+            return res.status(422).json({ message: "Invalid status, status must be 'to do' or 'in progress' or 'done'" });
         }
         const createTaskQuery = `
             INSERT INTO tasks (title, description, status, assignee_id)
@@ -192,7 +197,7 @@ app.put("/tasks/:taskId", authenticateToken, async (req, res) => {
         }
         // check if status is valid
         if (status && !validStatus.includes(status)) {
-            return res.status(400).json({ message: "Invalid status, status must be 'to do' or 'in progress' or 'done'" });
+            return res.status(422).json({ message: "Invalid status, status must be 'to do' or 'in progress' or 'done'" });
         }
         const getTaskByIdQuery = `SELECT * FROM tasks WHERE id = ${taskId};`;
         const taskByIdResponse = await client.query(getTaskByIdQuery);
@@ -211,7 +216,7 @@ app.put("/tasks/:taskId", authenticateToken, async (req, res) => {
         updateFields.push(`updated_at = CURRENT_TIMESTAMP`);
 
         if (updateFields.length === 1) {
-            return res.status(400).json({ message: "At least one parameter (title, description, status) must be provided" });
+            return res.status(409).json({ message: "At least one parameter (title, description, status) must be provided" });
         }
 
         const updateTaskQuery = `

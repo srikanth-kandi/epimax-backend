@@ -187,7 +187,7 @@ Tasks created by `testuser`
                 "message": "User with this username does not exist"
             }
             ```
-        - Status Code: `400`
+        - Status Code: `401`
         - Response Body:
         If the password is incorrect.
 
@@ -245,7 +245,7 @@ Before proceeding to below endpoints the token received from the `/login` endpoi
                 "message": "title, description and status are required"
             }
             ```
-        - Status Code: `400`
+        - Status Code: `422`
         - Response Body:
         If the status is invalid.
 
@@ -394,7 +394,7 @@ Before proceeding to below endpoints the token received from the `/login` endpoi
                 "message": "Task id must be a positive number"
             }
             ```
-        - Status Code: `400`
+        - Status Code: `422`
         - Response Body:
         If the `"status"` is invalid.
 
@@ -421,7 +421,7 @@ Before proceeding to below endpoints the token received from the `/login` endpoi
                 "message": "You are not authorized to update this task"
             }
             ```
-        - Status Code: `400`
+        - Status Code: `409`
         - Response Body:
         If there is no data provided to update.
 
