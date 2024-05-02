@@ -12,7 +12,7 @@ Live API URL - [https://epimax-backend-3j21.onrender.com/docs](https://epimax-ba
 -- PostgreSQL schema creation for users table
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    username TEXT NOT NULL,
+    username TEXT NOT NULL UNIQUE,
     password_hash TEXT NOT NULL
 );
 
