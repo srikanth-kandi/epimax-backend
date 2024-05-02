@@ -185,7 +185,7 @@ paths:
                 properties:
                   message:
                     type: "string"
-                    example: "Authentication failed"
+                    example: "Authorization failed"
         404:
           description: "If the user has not created any tasks yet"
           content:
@@ -260,7 +260,7 @@ paths:
                 properties:
                   message:
                     type: "string"
-                    example: "Authentication failed"
+                    example: "Authorization failed"
         422:
           description: "If the status is not one of the allowed values"
           content:
@@ -330,7 +330,7 @@ paths:
                 properties:
                   message:
                     type: "string"
-                    example: "Authentication failed"
+                    example: "Authorization failed"
         404:
           description: "If the task with the given taskId does not exist"
           content:
@@ -430,7 +430,7 @@ paths:
                 properties:
                   message:
                     type: "string"
-                    example: "Authentication failed"
+                    example: "Authorization failed"
         404:
           description: "If the task with the given taskId does not exist"
           content:
@@ -516,7 +516,7 @@ paths:
                 properties:
                   message:
                     type: "string"
-                    example: "Authentication failed"
+                    example: "Authorization failed"
         404:
           description: "If the task with the given taskId does not exist"
           content:

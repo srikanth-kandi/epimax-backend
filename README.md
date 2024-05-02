@@ -209,7 +209,7 @@ Before proceeding to below endpoints the token received from the `/login` endpoi
 
 ```json
 {
-    "message": "Authentication failed"
+    "message": "Authorization failed"
 }
 ```
 

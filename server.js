@@ -94,7 +94,7 @@ app.post("/login", async (req, res) => {
     }
 });
 
-// Middleware to authentication
+// Middleware to Authorization
 const authenticateToken = async (req, res, next) => {
     try {
         const token = req.headers.authorization.split(" ")[1];
@@ -105,7 +105,7 @@ const authenticateToken = async (req, res, next) => {
         next();
     } catch (error) {
         console.error(error);
-        res.status(401).json({ message: "Authentication failed" });
+        res.status(401).json({ message: "Authorization failed" });
     }
 };
 
